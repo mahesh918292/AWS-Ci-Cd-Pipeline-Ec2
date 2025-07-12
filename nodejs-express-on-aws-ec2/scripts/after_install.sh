@@ -11,7 +11,7 @@ ls -la
 
 # Install dependencies
 echo "Installing npm dependencies..."
-npm install
+sudo npm install
 
 # Check if node_modules was created
 if [ -d "node_modules" ]; then
