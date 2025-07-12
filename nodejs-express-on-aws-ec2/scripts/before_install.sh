@@ -1,15 +1,16 @@
 #!/bin/bash
+echo "Installing Node.js and dependencies..."
 
-#download node and npm
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
-. ~/.nvm/nvm.sh
-nvm install node
+# Update package lists
+sudo yum update -y
 
-#create our working directory if it doesnt exist
-DIR="/home/ec2-user/express-app"
-if [ -d "$DIR" ]; then
-  echo "${DIR} exists"
-else
-  echo "Creating ${DIR} directory"
-  mkdir ${DIR}
-fi
+# Install Node.js
+curl -sL https://rpm.nodesource.com/setup_16.x | sudo bash -
+sudo yum install -y nodejs
+
+# Install PM2 globally for background process management
+sudo npm install -g pm2
+
+echo "Node.js installation completed"
+echo "Node.js version: $(node -v)"
+echo "NPM version: $(npm -v)"
