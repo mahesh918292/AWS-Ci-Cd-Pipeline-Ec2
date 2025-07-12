@@ -5,34 +5,11 @@ echo "Starting application..."
 cd /home/ec2-user/express-app # <--- CORRECTED PATH
 
 # Check if we're in the right directory
-echo "Current directory: $(pwd)"
-echo "Directory contents:"
-ls -la
+pm2 stop app.js
+pm2 start app.js
 
-# Find the main file to run (logic is good, but ensure app.js, index.js, or server.js exists)
-MAIN_FILE=""
-if [ -f "app.js" ]; then
-  MAIN_FILE="app.js"
-elif [ -f "index.js" ]; then
-  MAIN_FILE="index.js"
-elif [ -f "server.js" ]; then
-  MAIN_FILE="server.js"
-else
-  echo "Could not find main file. Please specify the correct entry file (app.js, index.js, or server.js) in the root of your Node.js application."
-  exit 1
-fi
-
-echo "Using $MAIN_FILE as the main application file"
-
-# Stop any existing PM2 processes for this app
-pm2 delete express-app 2>/dev/null || true
-
-# Start the application with PM2
-echo "Starting application with PM2..."
-pm2 start $MAIN_FILE --name "express-app" --update-env # --update-env is good for latest env vars
-
-# Save the current process list (crucial for PM2 to restart on reboot)
-echo "Saving PM2 process list..."
+pm2 startup systemd
+sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u ec2-user --hp /home/ec2-user
 pm2 save
 
 # Generate and run startup script (Ideally a one-time setup in User Data)

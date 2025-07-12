@@ -15,14 +15,5 @@ echo "Installing npm dependencies..."
 # Ensure ec2-user has write permissions to the directory where npm install runs
 sudo npm install # <--- REMOVED sudo
 
-# Check if node_modules was created
-if [ -d "node_modules" ]; then
-  echo "node_modules directory created successfully"
-  echo "Contents of node_modules:"
-  ls -la node_modules | head -n 10
-else
-  echo "WARNING: node_modules directory was not created! Check npm install errors above."
-  exit 1 # Fail the script if node_modules isn't created
-fi
 
-echo "Application dependencies installation completed"
+
