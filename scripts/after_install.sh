@@ -13,7 +13,7 @@ ls -la
 # Install dependencies
 echo "Installing npm dependencies..."
 # Ensure ec2-user has write permissions to the directory where npm install runs
-npm install # <--- REMOVED sudo
+sudo npm install # <--- REMOVED sudo
 
 # Check if node_modules was created
 if [ -d "node_modules" ]; then
