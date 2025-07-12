@@ -1,32 +1,29 @@
 #!/bin/bash
-echo "Starting application..."
+echo "Setting up Node.js application with PM2..."
 
 # Navigate to application directory
 cd /home/ec2-user/express-app/nodejs-express-on-aws-ec2
 
-# Install dependencies if package.json exists
-if [ -f "package.json" ]; then
-  echo "Installing dependencies..."
-  npm install
-fi
+# Install dependencies
+npm install
 
-# Start the application with PM2 in the background
-# Assuming your main file is app.js or index.js - adjust if different
-if [ -f "app.js" ]; then
-  pm2 start app.js --name "express-app"
-elif [ -f "index.js" ]; then
-  pm2 start index.js --name "express-app"
-elif [ -f "server.js" ]; then
-  pm2 start server.js --name "express-app"
-else
-  echo "Could not find app.js, index.js, or server.js. Please specify the correct entry file."
-  exit 1
-fi
+# Stop any existing PM2 processes for this app
+pm2 delete express-app 2>/dev/null || true
 
-# Save PM2 process list so it restarts on reboot
+# Start the application with PM2
+pm2 start app.js --name "express-app"
+
+# Save the current process list
 pm2 save
 
-# Set PM2 to start on system startup
-sudo env PATH=$PATH:/usr/bin pm2 startup systemd -u ec2-user --hp /home/ec2-user
+# Generate and run startup script
+pm2 startup | tail -n 1 > startup_command.txt
+chmod +x startup_command.txt
+sudo bash startup_command.txt
 
-echo "Application started successfully in the background"
+# Ensure PM2 service is enabled
+sudo systemctl enable pm2-ec2-user
+
+echo "Application setup complete. It will now start automatically on system reboot."
+echo "Current running processes:"
+pm2 list
