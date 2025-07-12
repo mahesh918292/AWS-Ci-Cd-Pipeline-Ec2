@@ -1,28 +1,18 @@
 #!/bin/bash
-echo "Starting application..."
 
-# Navigate to application directory
-cd /home/ec2-user/express-app # <--- CORRECTED PATH
+#give permission for everything in the express-app directory
+sudo chmod -R 777 /home/ec2-user/express-app
 
-# Check if we're in the right directory
-pm2 stop app.js
-pm2 start app.js
+#navigate into our working directory where we have all our github files
+cd /home/ec2-user/express-app
 
-pm2 startup systemd
-sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u ec2-user --hp /home/ec2-user
-pm2 save
+#add npm and node to path
+export NVM_DIR="$HOME/.nvm"	
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # loads nvm	
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # loads nvm bash_completion (node is in path now)
 
-# Generate and run startup script (Ideally a one-time setup in User Data)
-# If it must be here, add a check to run only if not already enabled.
-echo "Setting up PM2 to start on system boot (if not already configured)..."
-if ! systemctl is-enabled pm2-ec2-user.service &>/dev/null; then
-  sudo env PATH=$PATH:/usr/bin pm2 startup systemd -u ec2-user --hp /home/ec2-user
-  # Ensure the generated service is enabled
-  sudo systemctl enable pm2-ec2-user.service
-else
-  echo "PM2 startup service already configured."
-fi
+#install node modules
+npm install
 
-echo "Application setup complete. It will now start automatically on system reboot."
-echo "Current running processes:"
-pm2 list
+#start our node app in the background
+node app.js > app.out.log 2> app.err.log < /dev/null & 
