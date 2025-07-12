@@ -11,12 +11,6 @@ echo "Current directory: $(pwd)"
 echo "Directory contents:"
 ls -la
 
-# Add npm and node to path (for nvm-based installations)
-# This assumes nvm was used in before_install.sh and is sourced.
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"     # loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # loads nvm bash_completion
-
 # Install Node.js modules (moved here since AfterInstall.sh is not being used)
 echo "Installing Node.js dependencies..."
 npm install --production || { echo "ERROR: npm install failed."; exit 1; }
