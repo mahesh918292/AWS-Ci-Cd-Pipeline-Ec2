@@ -2,14 +2,14 @@
 echo "Starting application..."
 
 # Navigate to application directory
-cd nodejs-express-on-aws-ec2
+cd /home/ec2-user/express-app/nodejs-express-on-aws-ec2 # <--- CORRECTED PATH
 
 # Check if we're in the right directory
 echo "Current directory: $(pwd)"
 echo "Directory contents:"
 ls -la
 
-# Find the main file to run
+# Find the main file to run (logic is good, but ensure app.js, index.js, or server.js exists)
 MAIN_FILE=""
 if [ -f "app.js" ]; then
   MAIN_FILE="app.js"
@@ -18,7 +18,7 @@ elif [ -f "index.js" ]; then
 elif [ -f "server.js" ]; then
   MAIN_FILE="server.js"
 else
-  echo "Could not find main file. Please specify the correct entry file."
+  echo "Could not find main file. Please specify the correct entry file (app.js, index.js, or server.js) in the root of your Node.js application."
   exit 1
 fi
 
@@ -29,19 +29,22 @@ pm2 delete express-app 2>/dev/null || true
 
 # Start the application with PM2
 echo "Starting application with PM2..."
-pm2 start $MAIN_FILE --name "express-app"
+pm2 start $MAIN_FILE --name "express-app" --update-env # --update-env is good for latest env vars
 
-# Save the current process list
+# Save the current process list (crucial for PM2 to restart on reboot)
 echo "Saving PM2 process list..."
 pm2 save
 
-# Generate and run startup script
-echo "Setting up PM2 to start on system boot..."
-sudo env PATH=$PATH:/usr/bin pm2 startup systemd -u ec2-user --hp /home/ec2-user
-
-# Ensure PM2 service is enabled
-echo "Enabling PM2 service..."
-sudo systemctl enable pm2-ec2-user
+# Generate and run startup script (Ideally a one-time setup in User Data)
+# If it must be here, add a check to run only if not already enabled.
+echo "Setting up PM2 to start on system boot (if not already configured)..."
+if ! systemctl is-enabled pm2-ec2-user.service &>/dev/null; then
+  sudo env PATH=$PATH:/usr/bin pm2 startup systemd -u ec2-user --hp /home/ec2-user
+  # Ensure the generated service is enabled
+  sudo systemctl enable pm2-ec2-user.service
+else
+  echo "PM2 startup service already configured."
+fi
 
 echo "Application setup complete. It will now start automatically on system reboot."
 echo "Current running processes:"

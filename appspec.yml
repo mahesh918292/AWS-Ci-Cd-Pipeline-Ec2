@@ -1,8 +1,8 @@
 version: 0.0
 os: linux
 files:
-  - source: /
-    destination: /
+  - source: / # Refers to the root of your CodeBuild artifact
+    destination: /home/ec2-user/express-app # <--- RECOMMENDED DESTINATION
 hooks:
   ApplicationStop:
     - location: scripts/application_stop.sh
@@ -20,3 +20,8 @@ hooks:
     - location: scripts/application_start.sh
       timeout: 300
       runas: ec2-user
+  # Highly recommended for production:
+  # ValidateService:
+  #   - location: scripts/validate_service.sh
+  #     timeout: 300
+  #     runas: ec2-user
