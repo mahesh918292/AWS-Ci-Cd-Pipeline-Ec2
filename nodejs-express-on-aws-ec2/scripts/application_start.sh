@@ -1,32 +1,47 @@
 #!/bin/bash
-echo "Setting up Node.js application with PM2 for automatic reboot..."
+echo "Starting application..."
 
-cd /home/ec2-user/express-app
+# Navigate to application directory
+cd /home/ec2-user/express-app/nodejs-express-on-aws-ec2
 
-echo "Current directory after cd: $(pwd)"
-echo "Contents of current directory:"
+# Check if we're in the right directory
+echo "Current directory: $(pwd)"
+echo "Directory contents:"
 ls -la
 
-echo "Installing dependencies (consider moving to AfterInstall hook)..."
-npm install
+# Find the main file to run
+MAIN_FILE=""
+if [ -f "app.js" ]; then
+  MAIN_FILE="app.js"
+elif [ -f "index.js" ]; then
+  MAIN_FILE="index.js"
+elif [ -f "server.js" ]; then
+  MAIN_FILE="server.js"
+else
+  echo "Could not find main file. Please specify the correct entry file."
+  exit 1
+fi
 
-echo "Stopping and deleting existing PM2 processes for express-app..."
+echo "Using $MAIN_FILE as the main application file"
+
+# Stop any existing PM2 processes for this app
 pm2 delete express-app 2>/dev/null || true
 
-echo "Starting application 'express-app' with PM2..."
+# Start the application with PM2
+echo "Starting application with PM2..."
+pm2 start $MAIN_FILE --name "express-app"
 
-pm2 start app.js --name "express-app" --update-env 
-
+# Save the current process list
 echo "Saving PM2 process list..."
 pm2 save
 
-
-echo "Generating and enabling PM2 startup script for ec2-user..."
+# Generate and run startup script
+echo "Setting up PM2 to start on system boot..."
 sudo env PATH=$PATH:/usr/bin pm2 startup systemd -u ec2-user --hp /home/ec2-user
 
-
-echo "Enabling PM2 systemd service..."
-sudo systemctl enable pm2-ec2-user.service 
+# Ensure PM2 service is enabled
+echo "Enabling PM2 service..."
+sudo systemctl enable pm2-ec2-user
 
 echo "Application setup complete. It will now start automatically on system reboot."
 echo "Current running processes:"
