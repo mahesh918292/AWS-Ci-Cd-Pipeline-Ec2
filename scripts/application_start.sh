@@ -2,7 +2,7 @@
 echo "Starting application..."
 
 # Navigate to application directory
-cd /home/ec2-user/express-app/nodejs-express-on-aws-ec2 # <--- CORRECTED PATH
+cd /home/ec2-user/express-app # <--- CORRECTED PATH
 
 # Check if we're in the right directory
 echo "Current directory: $(pwd)"

@@ -3,7 +3,7 @@ echo "Installing application dependencies..."
 
 # Navigate to application directory
 # Assuming 'nodejs-express-on-aws-ec2' is a subfolder within the deployed 'express-app'
-cd /home/ec2-user/express-app/nodejs-express-on-aws-ec2 # <--- CORRECTED PATH
+cd /home/ec2-user/express-app # <--- CORRECTED PATH
 
 # Check if we're in the right directory
 echo "Current directory: $(pwd)"
