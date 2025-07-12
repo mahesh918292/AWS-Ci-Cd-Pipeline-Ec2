@@ -4,20 +4,18 @@ echo "Executing BeforeInstall hook: Setting up Node.js, PM2, and deployment dire
 # Update package lists
 sudo yum update -y
 
-# Download and install Node.js using NVM (as per your original script)
-# NOTE: Using yum for Node.js is often more consistent for server environments.
-# Example for yum: curl -sL https://rpm.nodesource.com/setup_16.x | sudo bash - && sudo yum install -y nodejs
-echo "Installing Node.js via NVM..."
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
-# Source NVM to make it available in the current shell
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-nvm install node || { echo "ERROR: NVM Node.js install failed."; exit 1; }
+# Install Node.js using NodeSource repository (more reliable for EC2)
+echo "Installing Node.js via NodeSource repository..."
+curl -sL https://rpm.nodesource.com/setup_16.x | sudo bash -
+sudo yum install -y nodejs || { echo "ERROR: Node.js install failed."; exit 1; }
+
+# Verify node and npm installation
+node -v
+npm -v
 
 # Install PM2 globally
 echo "Installing PM2 globally..."
-npm install -g pm2 || { echo "ERROR: PM2 global install failed."; exit 1; }
+sudo npm install -g pm2 || { echo "ERROR: PM2 global install failed."; exit 1; }
 
 # Create our working directory if it doesn't exist and set proper permissions
 # This directory MUST match the 'destination' in your appspec.yml.
