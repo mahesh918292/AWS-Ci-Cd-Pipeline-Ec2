@@ -4,7 +4,6 @@ echo "Starting application..."
 # Navigate to application directory
 cd nodejs-express-on-aws-ec2
 
-sudo npm install
 # Check if we're in the right directory
 echo "Current directory: $(pwd)"
 echo "Directory contents:"
