@@ -10,8 +10,8 @@ pm2 start app.js --name "express-app" --update-env
 pm2 save
 
 if ! systemctl is-enabled pm2-ec2-user.service &>/dev/null; then
-  env PATH=$PATH:/usr/bin pm2 startup systemd -u ec2-user --hp /home/ec2-user
-  sudo systemctl enable pm2-ec2-user.service
+  env PATH=$PATH:/usr/bin pm2 startup systemd -u ec2-user --hp /home/ec2-user || { echo "ERROR: PM2 startup generation failed."; exit 1; }
+  systemctl enable pm2-ec2-user.service || { echo "ERROR: PM2 service enable failed."; exit 1; }
 else
   echo "PM2 systemd service already configured."
 fi
