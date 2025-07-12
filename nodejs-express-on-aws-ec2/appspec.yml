@@ -5,18 +5,18 @@ files:
     destination: /
 hooks:
   ApplicationStop:
-    - location: nodejs-express-on-aws-ec2/scripts/application_stop.sh
+    - location: scripts/application_stop.sh
       timeout: 300
       runas: ec2-user
   BeforeInstall:
-    - location: nodejs-express-on-aws-ec2/scripts/before_install.sh
+    - location: scripts/before_install.sh
       timeout: 300
       runas: ec2-user
   AfterInstall:
-    - location: nodejs-express-on-aws-ec2/scripts/after_install.sh
+    - location: scripts/after_install.sh
       timeout: 300
       runas: ec2-user
   ApplicationStart:
-    - location: nodejs-express-on-aws-ec2/scripts/application_start.sh
+    - location: scripts/application_start.sh
       timeout: 300
       runas: ec2-user
