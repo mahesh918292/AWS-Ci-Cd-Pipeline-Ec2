@@ -1,26 +1,15 @@
 #!/bin/bash
-set -e
 
-echo "Setting up Node.js, PM2, and deployment directory..."
+#download node and npm
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+. ~/.nvm/nvm.sh
+nvm install node
 
-sudo yum update -y
-curl -sL https://rpm.nodesource.com/setup_16.x | sudo bash -
-sudo yum install -y nodejs
-
-node -v
-npm -v
-
-sudo npm install -g pm2
-
-APP_DIR="/home/ec2-user/express-app"
-
-if [ -d "$APP_DIR" ]; then
-  rm -rf ${APP_DIR:?}/*
+#create our working directory if it doesnt exist
+DIR="/home/ec2-user/express-app"
+if [ -d "$DIR" ]; then
+  echo "${DIR} exists"
 else
-  mkdir -p "$APP_DIR"
+  echo "Creating ${DIR} directory"
+  mkdir ${DIR}
 fi
-
-chown -R ec2-user:ec2-user "$APP_DIR"
-chmod -R 755 "$APP_DIR"
-
-echo "Node.js, PM2, and directory preparation completed."
