@@ -10,7 +10,7 @@ sudo yum install -y nodejs
 node -v
 npm -v
 
-sudo npm install -g pm2@5.3.0
+sudo npm install -g pm2
 
 APP_DIR="/home/ec2-user/express-app"
 
