@@ -1,4 +1,4 @@
-EC2 script on creation to install the CodeDeploy Agent:
+EC2 script on creation to install the CodeDeploy Agent :
 
 #!/bin/bash
 sudo yum -y update
