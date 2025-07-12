@@ -12,6 +12,10 @@ hooks:
     - location: nodejs-express-on-aws-ec2/scripts/before_install.sh
       timeout: 300
       runas: ec2-user
+  AfterInstall:
+    - location: nodejs-express-on-aws-ec2/scripts/after_install.sh
+      timeout: 300
+      runas: ec2-user
   ApplicationStart:
     - location: nodejs-express-on-aws-ec2/scripts/application_start.sh
       timeout: 300
