@@ -1,18 +1,32 @@
 #!/bin/bash
+echo "Starting application..."
 
-#give permission for everything in the express-app directory
-sudo chmod -R 777 /home/ec2-user/express-app
+# Navigate to application directory
+cd /home/ec2-user/express-app/nodejs-express-on-aws-ec2
 
-#navigate into our working directory where we have all our github files
-cd /home/ec2-user/express-app
+# Install dependencies if package.json exists
+if [ -f "package.json" ]; then
+  echo "Installing dependencies..."
+  npm install
+fi
 
-#add npm and node to path
-export NVM_DIR="$HOME/.nvm"	
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # loads nvm	
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # loads nvm bash_completion (node is in path now)
+# Start the application with PM2 in the background
+# Assuming your main file is app.js or index.js - adjust if different
+if [ -f "app.js" ]; then
+  pm2 start app.js --name "express-app"
+elif [ -f "index.js" ]; then
+  pm2 start index.js --name "express-app"
+elif [ -f "server.js" ]; then
+  pm2 start server.js --name "express-app"
+else
+  echo "Could not find app.js, index.js, or server.js. Please specify the correct entry file."
+  exit 1
+fi
 
-#install node modules
-npm install
+# Save PM2 process list so it restarts on reboot
+pm2 save
 
-#start our node app in the background
-node app.js > app.out.log 2> app.err.log < /dev/null & 
+# Set PM2 to start on system startup
+sudo env PATH=$PATH:/usr/bin pm2 startup systemd -u ec2-user --hp /home/ec2-user
+
+echo "Application started successfully in the background"
