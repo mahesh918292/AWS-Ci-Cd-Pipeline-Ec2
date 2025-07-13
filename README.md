@@ -57,6 +57,7 @@ sudo yum erase codedeploy-agent
 <img width="1920" height="1080" alt="Screenshot (568)" src="https://github.com/user-attachments/assets/b62c5cb1-bd9d-4aa6-88e3-21c6ae8a5488" />
 # Output 
 <img width="1920" height="1080" alt="Screenshot (569)" src="https://github.com/user-attachments/assets/19b6bd33-8410-4ad0-a791-ca3ead667d5e" />
+
 # Making a change to the code for the automatic ci/cd pipeline trigger
 <img width="1920" height="1080" alt="Screenshot (570)" src="https://github.com/user-attachments/assets/2d1d0581-bc75-4e2a-ae96-6d4ae9bbf0e8" />
 # Pipeline has been triggered and output will be updated
@@ -64,7 +65,7 @@ sudo yum erase codedeploy-agent
 
 # Deployment Workflow
 
-## AWS CodePipeline + CodeDeploy
+# AWS CodePipeline + CodeDeploy
 
 **CodePipeline:**
 
