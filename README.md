@@ -34,6 +34,8 @@ sudo service codedeploy-agent status
 
 Location for CodeDeploy logs:
 ```
+
+
 /opt/codedeploy-agent/deployment-root/deployment-logs/codedeploy-agent-deployments.log
 ```
 
@@ -41,3 +43,40 @@ Uninstall CodeDeploy Agent:
 ```
 sudo yum erase codedeploy-agent
 ```
+
+
+<img width="1920" height="1080" alt="Screenshot (566)" src="https://github.com/user-attachments/assets/bd7a7a20-feb5-491a-9b87-ddd791961222" />
+# Creaate an ec2 instance and add these policies inorder to access code in s3 and deploy to ec2
+
+
+# Now Create a new pipeline,create a role for it,select source from where to upload files,tests ( optional ),give path of appspec.yml and create a pipeline
+
+
+<img width="1920" height="1080" alt="Screenshot (567)" src="https://github.com/user-attachments/assets/e0f980c5-7250-460f-a922-67191ae1e52e" />
+# After Creating pipeline this looks like this
+<img width="1920" height="1080" alt="Screenshot (568)" src="https://github.com/user-attachments/assets/b62c5cb1-bd9d-4aa6-88e3-21c6ae8a5488" />
+# Output 
+<img width="1920" height="1080" alt="Screenshot (569)" src="https://github.com/user-attachments/assets/19b6bd33-8410-4ad0-a791-ca3ead667d5e" />
+# Making a change to the code for the automatic ci/cd pipeline trigger
+<img width="1920" height="1080" alt="Screenshot (570)" src="https://github.com/user-attachments/assets/2d1d0581-bc75-4e2a-ae96-6d4ae9bbf0e8" />
+# Pipeline has been triggered and output will be updated
+
+
+# Deployment Workflow
+
+## AWS CodePipeline + CodeDeploy
+
+**CodePipeline:**
+
+- Connects to GitHub and pulls the latest source.
+- Packages the code into a ZIP archive.
+- Uploads the ZIP to an internal S3 bucket (artifact storage).
+- Passes the S3 artifact location (URL) to CodeDeploy.
+
+**CodeDeploy:**
+
+- Receives the artifact S3 path from CodePipeline.
+- The CodeDeploy Agent on the EC2 instance:
+  - Downloads the ZIP from S3.
+  - Extracts it to the instance.
+  - Executes lifecycle hooks defined in `appspec.yml`.
